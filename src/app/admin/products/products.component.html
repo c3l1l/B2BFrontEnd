@@ -1,0 +1,74 @@
+ <!-- Content Wrapper. Contains page content -->
+ <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Urunler</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a routerLink="/admin">Anasayfa</a></li>
+              <li class="breadcrumb-item active">Urunler</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Urun Listesi</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">          
+            <div class="form-group offset-9">
+              <input class="form-control" [(ngModel)]="filterText" [ngModelOptions]="{standalone:true}" type="search" placeholder="Aranacak kelime" aria-label="Aranacak kelime">              
+            </div>         
+        </div>
+        <div class="card-body">
+          <table class="table table-hovered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Urun Adi</th>
+                    <th>Urun Resmi</th>
+                    <th>Islemler</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let product of products
+                | productPipe:filterText 
+                 let index=index">
+                    <td [innerText]="index + 1"></td>
+                    <td [innerText]="product.name"></td>
+                    <td>
+                   <img [src]="product.mainImage == null ? './assets/img/notfound.jpg' : product.mainImage ">
+                    </td>                  
+                    <td>
+                        <!-- <button class="btn btn-danger" [swal]="deleteSwal" (confirm)="delete(product)">Sil</button> -->                        
+                        <button class="btn btn-danger" (click)="deleteConfirmation(product)">Sil</button>
+                    </td>                    
+                </tr>
+            </tbody>
+          </table>
+        </div>       
+      </div>  
+    </section>    
+  </div>
+
+  <!-- <swal #deleteSwal title="Sil?" text="Urunu silmek istiyor musunuz?" type="question" [showCancelButton]="true" [focusCancel]="true" [swalOptions]="{confirmButtonText: 'Sil', cancelButtonText:'Vazgec'}"></swal> -->
