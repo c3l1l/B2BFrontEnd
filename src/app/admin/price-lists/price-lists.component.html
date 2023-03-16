@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Urunler</h1>
+            <h1>Fiyat Listeleri</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a routerLink="/admin">Anasayfa</a></li>
-              <li class="breadcrumb-item active">Urunler</li>
+              <li class="breadcrumb-item active">Fiyat Listeleri</li>
             </ol>
           </div>
         </div>
@@ -23,7 +23,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Urun Listesi</h3>
+          <h3 class="card-title">Fiyat Listeleri</h3>
 
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -37,7 +37,7 @@
         <div class="card-body">     
           <div class="row">
             <div class="col-md-6">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productAddModel">Urun Ekle</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModel">Fiyat Listesi Ekle</button>
                 <button class="btn btn-info mx-2" (click)="exportExcel()">Excel'e aktar</button>
                
             </div>
@@ -54,27 +54,25 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Urun Adi</th>
-                    <th>Urun Resmi</th>
+                    <th>Fiyat Listesi Adi</th>
+                    
                     <th>Islemler</th>
 
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let product of products
-                | productPipe:filterText 
+                <tr *ngFor="let priceList of priceLists
+                | priceListPipe:filterText 
                  let index=index">
                     <td [innerText]="index + 1"></td>
                     <td>
-                      <a [innerText]="product.name" routerLink="/admin/products/{{product.id}}/images" class="btn btn-default"></a>
+                      <a [innerText]="priceList.name" routerLink="/admin/price-list/{{priceList.id}}" class="btn btn-default"></a>
                     </td>
+                                    
                     <td>
-                   <img [src]="product.mainImageUrl == '' ? './assets/img/notfound.jpg' : './assets/img/'+product.mainImageUrl ">
-                    </td>                  
-                    <td>
-                        <!-- <button class="btn btn-danger" [swal]="deleteSwal" (confirm)="delete(product)">Sil</button> -->                     
-                        <button class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#productUpdateModel" (click)="getProduct(product)">Guncelle</button>   
-                        <button class="btn btn-danger mx-2" (click)="deleteConfirmation(product)">Sil</button>
+                                          
+                        <button class="btn btn-warning " data-bs-toggle="modal" data-bs-target="#updateModel" (click)="getPriceList(priceList)">Fiyat Listesini Guncelle</button>   
+                        <button class="btn btn-danger mx-2" (click)="delete(priceList)">Sil</button>
                     </td>                    
                 </tr>
             </tbody>
@@ -84,23 +82,23 @@
     </section>    
   </div>
   <!-- Modal -->
-<div class="modal fade" id="productAddModel" tabindex="-1"  aria-hidden="true">
+<div class="modal fade" id="addModel" tabindex="-1"  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Urun Ekle</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Fiyat Listesi Ekle</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form #addForm="ngForm">
         <div class="form-group">
-          <label for="exampleInputPassword1">Urun Adi</label>
-          <input type="text" class="form-control" ngModel name="productName" required minlength="3" #productName  placeholder="Urun adi">
+          <label for="exampleInputPassword1">Fiyat Listesi Adi</label>
+          <input type="text" class="form-control" ngModel name="priceListName" required minlength="3" #priceListName  placeholder="Urun adi">
         </div>
       </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="add(addForm)">Urunu Ekle</button>
+        <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="add(addForm)">Fiyat Listesi Ekle Ekle</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
       </div>
     </div>
@@ -108,27 +106,27 @@
 </div>
 
  <!-- Modal -->
- <div class="modal fade" id="productUpdateModel" tabindex="-1"  aria-hidden="true">
+ <div class="modal fade" id="updateModel" tabindex="-1"  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Urun Guncelle</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Fiyat Listesi Guncelle</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form #updateForm="ngForm">
         <div class="form-group">
           <label for="exampleInputPassword1">Urun Adi</label>
-          <input type="text" class="form-control" [(ngModel)]="product.name" [ngModelOptions]="{standalone:true}" required minlength="3" #productName  placeholder="Urun adi">
+          <input type="text" class="form-control" [(ngModel)]="priceList.name" [ngModelOptions]="{standalone:true}" required minlength="3" #productName  placeholder="Urun adi">
         </div>
       </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="update()">Urunu Guncelle</button>
+        <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="update()">Fiyat Listesi Guncelle</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updateModelCloseBtn">Kapat</button>
       </div>
     </div>
   </div>
 </div>
 
-  <!-- <swal #deleteSwal title="Sil?" text="Urunu silmek istiyor musunuz?" type="question" [showCancelButton]="true" [focusCancel]="true" [swalOptions]="{confirmButtonText: 'Sil', cancelButtonText:'Vazgec'}"></swal> -->
+  <swal #deleteSwal title="Sil?" text="Fiyat Listesini silmek stiyor musunuz?" type="question" [showCancelButton]="true" [focusCancel]="true" [swalOptions]="{confirmButtonText: 'Sil', cancelButtonText:'Vazgec'}"></swal>

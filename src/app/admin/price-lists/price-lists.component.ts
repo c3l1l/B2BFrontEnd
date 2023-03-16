@@ -1,24 +1,27 @@
 import { Component } from '@angular/core';
-import { ErrorService } from 'src/app/services/error.service';
-import { ProductModel } from './models/product-model';
-import { ProductService } from './service/product.service';
-import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ErrorService } from 'src/app/services/error.service';
 import { HelperService } from 'src/app/services/helper.service';
-
+import Swal from 'sweetalert2';
+import { ProductModel } from '../products/models/product-model';
+import { PriceListModel } from './models/price-list-model';
+import { PriceListService } from './service/price-list.service';
 
 @Component({
-  selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  selector: 'app-price-lists',
+  templateUrl: './price-lists.component.html',
+  styleUrls: ['./price-lists.component.scss']
 })
-export class ProductsComponent {
-  products:ProductModel[]=[];
-  product:ProductModel=new ProductModel();
-  filterText:string="";
-  
-constructor(private productService:ProductService,private errorService:ErrorService,private toastr:ToastrService,private helperService:HelperService){}
+export class PriceListsComponent {
+
+priceLists:PriceListModel[]=[];
+priceList:PriceListModel=new PriceListModel();
+
+filterText:string="";
+
+constructor(private priceListService:PriceListService,private errorService:ErrorService,private toastr:ToastrService,private helperService:HelperService){}
+
 
 ngOnInit():void{
   this.getList();
@@ -26,7 +29,7 @@ ngOnInit():void{
 
 exportExcel(){
   let element=document.getElementById("excel-table");
-  let title="Urunler";
+  let title="Fiyat Listeleri";
   this.helperService.exportExcel(element,title);
 }
 
@@ -52,29 +55,29 @@ deleteConfirmation(product:ProductModel) {
 }
 
 getList(){
-  this.productService.getList().subscribe((res:any)=>{
-    this.products=res.data;
+  this.priceListService.getList().subscribe((res:any)=>{
+    this.priceLists=res.data;
     
   },(err)=>{
     this.errorService.errorHandler(err);
   })
 }
-delete(product:ProductModel){
- this.productService.delete(product).subscribe((res:any)=>{
+delete(priceList:PriceListModel){
+ this.priceListService.delete(priceList).subscribe((res:any)=>{
     this.toastr.info(res.message)
     this.getList()
  },(err)=>{
   this.errorService.errorHandler(err);
  })
-console.log("delete product"+product);
+
 }
 
 add(addForm:NgForm){
-  let product:ProductModel=new ProductModel();
-  product.name=addForm.value.productName;
-  product.id=0;
+  let priceListModel:PriceListModel=new PriceListModel();
+  priceListModel.name=addForm.value.priceListName;
+  priceListModel.id=0;
 
-  this.productService.add(product).subscribe((res:any)=>{
+  this.priceListService.add(priceListModel).subscribe((res:any)=>{
     this.toastr.success(res.message);
     this.getList();
     addForm.reset();
@@ -82,16 +85,16 @@ add(addForm:NgForm){
     this.errorService.errorHandler(err);
   })
 }
-getProduct(product:ProductModel){
-  this.productService.getById(product.id).subscribe((res:any)=>{
-    this.product=res.data;
+getPriceList(priceList:PriceListModel){
+  this.priceListService.getById(priceList.id).subscribe((res:any)=>{
+    this.priceList=res.data;
   },(err)=>{
     this.errorService.errorHandler(err);
   })
 }
 update(){ 
 
-  this.productService.update(this.product).subscribe((res:any)=>{
+  this.priceListService.update(this.priceList).subscribe((res:any)=>{
     this.toastr.success(res.message);
     this.getList();
     document.getElementById("updateModelCloseBtn").click();//Modal'daki kapat butonunun otomatik kapanmasi icin kullanildi.
@@ -99,5 +102,6 @@ update(){
     this.errorService.errorHandler(err);
   });
 }
+
 
 }
