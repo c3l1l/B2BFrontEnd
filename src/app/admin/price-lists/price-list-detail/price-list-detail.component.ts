@@ -6,6 +6,7 @@ import { ErrorService } from 'src/app/services/error.service';
 import { HelperService } from 'src/app/services/helper.service';
 import Swal from 'sweetalert2';
 import { ProductModel } from '../../products/models/product-model';
+import { ProductService } from '../../products/service/product.service';
 import { PriceListDetailModel } from './model/price-list-detail-model';
 import { PriceListDetailService } from './service/price-list-detail.service';
 
@@ -15,18 +16,20 @@ import { PriceListDetailService } from './service/price-list-detail.service';
   styleUrls: ['./price-list-detail.component.scss']
 })
 export class PriceListDetailComponent {
+  products:ProductModel[]=[];
   priceListDetails:PriceListDetailModel[]=[];
   priceListDetail:PriceListDetailModel=new PriceListDetailModel();
   
   filterText:string="";
   priceListId:number=0;
-  constructor(private priceListDetailService:PriceListDetailService,private errorService:ErrorService,private toastr:ToastrService,private helperService:HelperService,private activatedRoute:ActivatedRoute){}
+  constructor(private priceListDetailService:PriceListDetailService,private errorService:ErrorService,private toastr:ToastrService,private helperService:HelperService,private activatedRoute:ActivatedRoute,private productService:ProductService){}
   
   
   ngOnInit():void{
     this.activatedRoute.params.subscribe((res:any)=>{
         this.priceListId= res.id
         this.getList();
+        this.getProductList();
     })
    
   }
@@ -60,12 +63,21 @@ export class PriceListDetailComponent {
   
   getList(){
     this.priceListDetailService.getList(this.priceListId).subscribe((res:any)=>{
-      this.priceListDetail=res.data;
+      this.priceListDetails=res.data;     
       
     },(err)=>{
       this.errorService.errorHandler(err);
     })
   }
+
+getProductList(){
+  this.productService.getList().subscribe((res:any)=>{
+    this.products=res.data;
+  },(err)=>{
+    this.errorService.errorHandler(err);
+  })
+}
+
   delete(priceListDetail:PriceListDetailModel){
    this.priceListDetailService.delete(priceListDetail).subscribe((res:any)=>{
       this.toastr.info(res.message)
@@ -76,28 +88,24 @@ export class PriceListDetailComponent {
   }
   
   add(addForm:NgForm){
-    // let product:ProductModel=new ProductModel();
-    // product.name=addForm.value.productName;
-    // product.id=0;
-  
-    // this.priceListService.add(product).subscribe((res:any)=>{
-    //   this.toastr.success(res.message);
-    //   this.getList();
-    //   addForm.reset();
-    // },(err)=>{
-    //   this.errorService.errorHandler(err);
-    // })
-  }
-  getPriceListDetail(priceListDetail:PriceListDetailModel){
-    this.priceListDetailService.getById(priceListDetail.id).subscribe((res:any)=>{
-      this.priceListDetail=res.data;
+    let priceListDetail:PriceListDetailModel=new PriceListDetailModel();
+    priceListDetail.productId=addForm.value.productId;
+    priceListDetail.price=addForm.value.price;
+    priceListDetail.priceListId=this.priceListId;
+    priceListDetail.id=0;
+    console.log(priceListDetail);
+    this.priceListDetailService.add(priceListDetail).subscribe((res:any)=>{
+      this.toastr.success(res.message);
+      this.getList();
+      addForm.reset();
     },(err)=>{
       this.errorService.errorHandler(err);
     })
   }
-  update(){ 
+
+  update(priceListDetail:PriceListDetailModel){ 
   
-    this.priceListDetailService.update(this.priceListDetail).subscribe((res:any)=>{
+    this.priceListDetailService.update(priceListDetail).subscribe((res:any)=>{
       this.toastr.success(res.message);
       this.getList();
       document.getElementById("updateModelCloseBtn").click();//Modal'daki kapat butonunun otomatik kapanmasi icin kullanildi.

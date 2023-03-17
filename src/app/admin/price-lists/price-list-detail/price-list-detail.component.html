@@ -66,11 +66,13 @@
                 | priceListDetailPipe:filterText 
                  let index=index">
                     <td [innerText]="index + 1"></td>
-                    <td [innerText]="priceListDetail.productName">
-                    <td [innerText]="priceListDetail.price | currency:'TRY':'symbol-narrow':'1.2-2'"></td>
+                    <td [innerText]="priceListDetail.productName"></td>
+                        <td>
+                            <input type="text" autocomplete="off" class="form-control" [(ngModel)]="priceListDetail.price" [ngModelOptions]="{standalone:true}" />
+                        </td>
                                                         
                     <td>                                          
-                        <button class="btn btn-warning " (click)="getPriceListDetail(priceListDetail)">Guncelle</button>   
+                        <button class="btn btn-warning " (click)="update(priceListDetail)">Guncelle</button>   
                         <button class="btn btn-danger mx-2" (click)="delete(priceListDetail)">Sil</button>
                     </td>                    
                 </tr>
@@ -92,11 +94,14 @@
         <form #addForm="ngForm">
         <div class="form-group">
           <label for="exampleInputPassword1">Urun Adi</label>
-          <select class="form-control">
-
-          </select>
-          <input type="text" class="form-control" ngModel name="productName" required minlength="3" #productName  placeholder="Urun adi">
+          <select class="form-control" ngModel name="productId" #productId required>
+            <option [value]="product.id" *ngFor="let product of products" [innerText]="product.name"></option>
+          </select>         
         </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Fiyati</label>
+            <input type="text" class="form-control" ngModel name="price" #price required min="0" #priceListName  placeholder="Fiyati">
+          </div>
       </form>
       </div>
       <div class="modal-footer">
@@ -107,4 +112,4 @@
   </div>
 </div>
 
-  <swal #deleteSwal title="Sil?" text="Urunu silmek stiyor musunuz?" type="question" [showCancelButton]="true" [focusCancel]="true" [swalOptions]="{confirmButtonText: 'Sil', cancelButtonText:'Vazgec'}"></swal>
+  <swal #deleteSwal title="Sil?" text="Urun fiyatini silmek stiyor musunuz?" type="question" [showCancelButton]="true" [focusCancel]="true" [swalOptions]="{confirmButtonText: 'Sil', cancelButtonText:'Vazgec'}"></swal>

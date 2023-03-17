@@ -11,23 +11,23 @@ export class PriceListDetailService {
   constructor(private httpClient:HttpClient,@Inject("apiUrl") private apiUrl:string) { }
 
   getList(priceListId:number){
-    let api=this.apiUrl+"PriceListsDetails/GetList"+priceListId;
+    let api=this.apiUrl+"PriceListDetails/GetListDto/"+priceListId;
     return this.httpClient.get(api);
   }
   getById(id:number){
-    let api=this.apiUrl+"PriceListsDetails/GetById/"+id;
+    let api=this.apiUrl+"PriceListDetails/GetById/"+id;
     return this.httpClient.get(api);
   }
   delete(priceListDetail:PriceListDetailModel){
-    let api=this.apiUrl+"PriceListsDetails/Delete";
+    let api=this.apiUrl+"PriceListDetails/Delete";
     return this.httpClient.post(api,priceListDetail);
   }
   add(priceListDetail:PriceListDetailModel){
-    let api=this.apiUrl+"PriceListsDetails/Add";
+    let api=this.apiUrl+"PriceListDetails/Add";
     return this.httpClient.post(api,priceListDetail);
   }
   update(priceListDetail:PriceListDetailModel){
-    let api=this.apiUrl+"PriceListsDetails/Update";
+    let api=this.apiUrl+"PriceListDetails/Update";
     return this.httpClient.post(api,priceListDetail);
   }
   
