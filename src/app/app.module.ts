@@ -8,6 +8,7 @@ import{ HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { AuthInterceptor } from './admin/login/interceptor/auth.interceptor';
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { AuthInterceptor } from './admin/login/interceptor/auth.interceptor';
     HttpClientModule,
     BrowserModule,
     SweetAlert2Module.forRoot(),
+    BrowserAnimationsModule,
    // ToastrModule  
     ToastrModule.forRoot({
       closeButton:true,

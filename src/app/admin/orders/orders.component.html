@@ -1,0 +1,162 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Siparisler</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a routerLink="/admin">Anasayfa</a></li>
+            <li class="breadcrumb-item active">Siparisler</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Siparisler</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-info mx-2" (click)="exportExcel()">Excel'e aktar</button>
+          </div>
+          <div class="col-md-3">
+            <select name="status" (change)="getStatus($event)" [(ngModel)]="statusText"
+              [ngModelOptions]="{standalone:true}" id="status" class="form-control">
+              <option value="Tumu">Tumu</option>
+              <option value="Reddedilen">Reddedilenler</option>
+              <option value="Onay Bekliyor">Onay Bekleyenler</option>
+              <option value="Islemde">Islemde Olanlar</option>
+              <option value="Sevke Hazir">Sevke Hazir Olanlar</option>
+              <option value="Sevkiyati Yapildi">Sevkiyati Yapilanlar</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group offset-6">
+              <input class="form-control" [(ngModel)]="filterText" [ngModelOptions]="{standalone:true}" type="search"
+                placeholder="Aranacak kelime" aria-label="Aranacak kelime">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="card-body">
+        <table class="table table-hovered" id="excel-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Siparis Durumu</th>
+              <th>Tarih</th>
+              <th>Siparis Numarasi</th>
+              <th>Musteri Adi</th>
+              <th>Siparis Adedi</th>
+              <th>Toplam Tutar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders
+                | orderPipe: statusText : filterText 
+                 let index=index">
+              <td [innerText]="index + 1"></td>
+              <td [innerText]="order.status"></td>
+
+              <td [innerText]="order.date | date:'dd.MM.yyyy'"></td>
+              <td>
+                <a [innerText]="order.orderNumber" routerLink="/admin/orders/{{order.id}}" class="btn btn-default"></a>
+              </td>
+              <td [innerText]="order.customerName"></td>
+             
+              <td [innerText]="order.quantity"></td>
+              <td [innerText]="order.total | currency:'TRY':'symbol-narrow':'1.2-2'"></td>
+              <td *ngIf="order.status =='Reddedilen'">
+
+              </td>
+              <td *ngIf="order.status =='Onay Bekliyor'">
+                <button class="btn btn-danger" (click)="update(order,'Reddedilen')">Reddet</button>
+                <button class="btn btn-success mx-2" (click)="update(order,'Islemde')">Isleme Al</button>
+              </td>
+              <td *ngIf="order.status =='Islemde'">
+                <button class="btn btn-danger " (click)="update(order,'Onay Bekliyor')">Onaya Geri Cek</button>
+                <button class="btn btn-primary mx-2" (click)="update(order,'Sevke Hazir')">Sevke Hazirla</button>
+              </td>
+              <td *ngIf="order.status =='Sevke Hazir'">
+                <button class="btn btn-danger " (click)="update(order,'Islemde')">Isleme Geri Cek</button>
+                <button class="btn btn-primary mx-2" (click)="update(order,'Sevkiyati Yapildi')">Sevkiyati
+                  Tamamla</button>
+              </td>
+              <td *ngIf="order.status =='Sevkiyati Yapildi'">
+                <button class="btn btn-danger " (click)="update(order,'Sevke Hazir')">Sevke Hazira Geri Cek</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- Modal -->
+<!-- <div class="modal fade" id="addModel" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Fiyat Listesi Ekle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm">
+        <div class="form-group">
+          <label for="exampleInputPassword1">Fiyat Listesi Adi</label>
+          <input type="text" class="form-control" ngModel name="priceListName" required minlength="3" #priceListName  placeholder="Fiyat Listesi adi">
+        </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" [disabled]="!addForm.valid" (click)="add(addForm)">Fiyat Listesi Ekle Ekle</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="updateModel" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Fiyat Listesi Guncelle</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #updateForm="ngForm">
+        <div class="form-group">
+          <label for="exampleInputPassword1">Urun Adi</label>
+          <input type="text" class="form-control" [(ngModel)]="priceList.name" [ngModelOptions]="{standalone:true}" required minlength="3" #productName  placeholder="Urun adi">
+        </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="update()">Fiyat Listesi Guncelle</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updateModelCloseBtn">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div> -->
