@@ -9,7 +9,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a routerLink="/admin">Anasayfa</a></li>
+              <li class="breadcrumb-item"><a routerLink="/">Anasayfa</a></li>
               <li class="breadcrumb-item active">Fiyat Listeleri</li>
             </ol>
           </div>
@@ -66,7 +66,7 @@
                  let index=index">
                     <td [innerText]="index + 1"></td>
                     <td>
-                      <a [innerText]="priceList.name" routerLink="/admin/price-list/{{priceList.id}}" class="btn btn-default"></a>
+                      <a [innerText]="priceList.name" routerLink="/price-list/{{priceList.id}}" class="btn btn-default"></a>
                     </td>
                                     
                     <td>

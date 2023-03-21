@@ -26,7 +26,7 @@ export class AuthService {
       console.log(res);
       this.adminTokenModel=res.data;
       localStorage.setItem("adminToken",this.adminTokenModel.adminAccessToken);
-      this.router.navigate(["/admin"])
+      this.router.navigate(["/"])
       this.toastr.success("Giris basarili");
     },(err)=>{
       this.errorService.errorHandler(err);
