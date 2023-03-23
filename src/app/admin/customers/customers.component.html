@@ -151,19 +151,19 @@
           <h5 class="modal-title" id="exampleModalLabel">Musteri Sifre Guncelle</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <form #updateForm="ngForm">
         <div class="modal-body">
-          <form #updateForm="ngForm">
               
                 <div class="form-group">
                     <label for="exampleInputPassword1">Sifre</label>
-                    <input type="password" class="form-control" ngModel="customer.email" name="password" #password required >
+                    <input type="password" class="form-control" [(ngModel)]="newPassword" [ngModelOptions]="{standalone:true}" name="password" #password required >
                   </div>              
-        </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="changePassword(password)">Musteri Sifre Guncelle</button>
+          <button type="button" class="btn btn-warning" [disabled]="!updateForm.valid" (click)="changePassword()">Musteri Sifre Guncelle</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="updatePasswordModelCloseBtn">Kapat</button>
         </div>
+      </form>
       </div>
     </div>
   </div>

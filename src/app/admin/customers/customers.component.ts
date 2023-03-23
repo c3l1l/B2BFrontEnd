@@ -22,6 +22,7 @@ export class CustomersComponent {
   customer:CustomerModel=new CustomerModel();
   
   filterText:string="";
+  newPassword:string="";
   
   constructor(private customerService:CustomerService,private errorService:ErrorService,private toastr:ToastrService,private helperService:HelperService,private priceListService:PriceListService){}
   
@@ -133,10 +134,10 @@ export class CustomersComponent {
       this.errorService.errorHandler(err);
     });
   }
-  changePassword(password:any){ 
+  changePassword(){ 
     let customer=new CustomerModel();
     customer.id=this.customer.id;
-    customer.password=password.value;
+    customer.password=this.newPassword;
     this.customerService.changePasswordByAdminPanel(customer).subscribe((res:any)=>{
       this.toastr.info(res.message);
       this.getList();
